@@ -5,5 +5,5 @@ import com.example.core.domain.model.Character
 
 interface CharactersRemoteDataSource<T> {
 
-   suspend fun fetchCharacters(query: Map<String, String>) : T
+   suspend fun fetchCharacters(queries: Map<String, String>) : T
 }
