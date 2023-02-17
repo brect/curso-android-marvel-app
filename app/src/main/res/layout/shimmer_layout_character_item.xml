@@ -16,26 +16,26 @@
             android:id="@+id/imageView_character"
             android:layout_width="0dp"
             android:layout_height="170dp"
+            android:background="@color/medium_grey"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_characterName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
+            android:background="@color/medium_grey"
             android:ellipsize="end"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_character"
-            tools:text="Spider Man" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView_character" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
