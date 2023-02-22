@@ -8,7 +8,7 @@ import com.example.marvelapp.framework.network.response.ThumbnailResponse
 class DataWrapperResponseFactory {
 
     fun create() = DataWrapperResponse(
-        copyRight = "",
+        copyright = "",
         data = DataContainerResponse(
             offset = 0,
             total = 2,
