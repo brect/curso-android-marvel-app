@@ -35,10 +35,15 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "com.example.marvelapp.CustomTestRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
 
         buildConfigField "String", "PUBLIC_KEY", apikeyProperties['PUBLIC_KEY']
         buildConfigField "String", "PRIVATE_KEY", apikeyProperties['PRIVATE_KEY']
         buildConfigField "String", "BASE_URL", '"https://gateway.marvel.com/v1/public/"'
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     buildTypes {
@@ -140,4 +145,6 @@ dependencies {
 
     def fragment_version = "1.5.5"
     debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
 }
