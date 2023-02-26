@@ -1,22 +1,21 @@
-apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: "io.gitlab.arturbosch.detekt"
 
-project.afterEvaluate{
+project.afterEvaluate {
     tasks.named("preBuild") {
         dependsOn("detekt")
     }
 }
 
 detekt {
-    toolVersion = "$deteket_version"
-
+    toolVersion = "$detekt_version"
     def inputDirFiles = []
-    rootProject.subprojects.each {
-        module -> inputDirFiles << "$module.projectDir/src/main/java"
+    rootProject.subprojects.each { module ->
+        inputDirFiles << "$module.projectDir/src/main/java"
     }
-
     source = files(inputDirFiles)
     config = files("$rootDir/config/detekt/detekt.yml")
     autoCorrect = true
+
     reports {
         xml {
             enabled = true
