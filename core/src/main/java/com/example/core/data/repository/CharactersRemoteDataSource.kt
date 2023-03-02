@@ -1,9 +1,10 @@
 package com.example.core.data.repository
 
-import androidx.paging.PagingSource
-import com.example.core.domain.model.Character
+import com.example.core.domain.model.CharacterPaging
+import com.example.core.domain.model.Comic
 
-interface CharactersRemoteDataSource<T> {
+interface CharactersRemoteDataSource {
 
-   suspend fun fetchCharacters(queries: Map<String, String>) : T
+   suspend fun fetchCharacters(queries: Map<String, String>) : CharacterPaging
+   suspend fun fetchComics(characterId: Int) : List<Comic>
 }
