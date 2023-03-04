@@ -66,6 +66,7 @@ class CharactersFragment : Fragment() {
                 .actionCharactersFragmentToDetailFragment(
                     character.name,
                     DetailViewArg(
+                        characterId = character.id,
                         name = character.name,
                         imageUrl = character.imageUrl
                     )

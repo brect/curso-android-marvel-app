@@ -17,14 +17,16 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(private val useCase: GetComicsUseCase) : ViewModel() {
 
     private val _uiState = MutableLiveData<UiState>()
-    val iuState: LiveData<UiState> get() = _uiState
+    val uiState: LiveData<UiState> get() = _uiState
     fun getComics(characterId: Int) = viewModelScope.launch {
-        useCase.invoke(GetComicsUseCase.GetComicsParams(characterId)).watchStatus()
+        useCase.invoke(
+            GetComicsUseCase.GetComicsParams(characterId)
+        ).watchStatus()
     }
 
     private fun Flow<ResultStatus<List<Comic>>>.watchStatus() = viewModelScope.launch {
         collect { status ->
-            when (status) {
+            _uiState.value = when (status) {
                 ResultStatus.Loading -> UiState.Loading
                 is ResultStatus.Success -> UiState.Success(status.data)
                 is ResultStatus.Error -> UiState.Error
