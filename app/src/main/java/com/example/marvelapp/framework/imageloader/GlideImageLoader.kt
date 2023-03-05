@@ -6,10 +6,16 @@ import com.bumptech.glide.Glide
 import com.example.marvelapp.R
 import javax.inject.Inject
 
-class GlideImageLoader @Inject constructor(): ImageLoader {
-    override fun load(imageView: ImageView, imageUrl: String, @DrawableRes fallback: Int) {
+class GlideImageLoader @Inject constructor() : ImageLoader {
+    override fun load(
+        imageView: ImageView,
+        imageUrl: String,
+        @DrawableRes placeholder: Int,
+        @DrawableRes fallback: Int,
+    ) {
         Glide.with(imageView.rootView)
             .load(imageUrl)
+            .placeholder(placeholder)
             .fallback(fallback)
             .into(imageView)
     }

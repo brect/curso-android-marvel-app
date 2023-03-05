@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.domain.model.Comic
 import com.example.core.usecase.GetComicsUseCase
 import com.example.core.usecase.base.ResultStatus
+import com.example.marvelapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class DetailViewModel @Inject constructor(private val useCase: GetComicsUseCase)
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> get() = _uiState
+
     fun getComics(characterId: Int) = viewModelScope.launch {
         useCase.invoke(
             GetComicsUseCase.GetComicsParams(characterId)
@@ -28,7 +30,20 @@ class DetailViewModel @Inject constructor(private val useCase: GetComicsUseCase)
         collect { status ->
             _uiState.value = when (status) {
                 ResultStatus.Loading -> UiState.Loading
-                is ResultStatus.Success -> UiState.Success(status.data)
+                is ResultStatus.Success -> {
+                    val detailChildList = status.data.map {
+                        DetailChildVE(it.id, it.imageUrl)
+                    }
+
+                    val detailParentList = listOf(
+                        DetailParentVE(
+                            R.string.details_comics_category,
+                            detailChildList
+                        )
+                    )
+
+                    UiState.Success(detailParentList)
+                }
                 is ResultStatus.Error -> UiState.Error
             }
         }
@@ -36,7 +51,7 @@ class DetailViewModel @Inject constructor(private val useCase: GetComicsUseCase)
 
     sealed class UiState {
         object Loading : UiState()
-        data class Success(val comics: List<Comic>) : UiState()
+        data class Success(val detailParentList: List<DetailParentVE>) : UiState()
         object Error : UiState()
     }
 }
