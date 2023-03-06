@@ -46,18 +46,31 @@ class DetailFragment : Fragment() {
         setSharedElementTransitionOnEnter()
 
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                DetailViewModel.UiState.Loading -> {}
-                is DetailViewModel.UiState.Success -> binding.recyclerViewParentDetail.run {
-                    setHasFixedSize(true)
-                    adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
+            binding.viewFlipperDatail.displayedChild = when (uiState) {
+                DetailViewModel.UiState.Loading -> {
+                    FLIPPER_CHILD_LOADING
                 }
-                DetailViewModel.UiState.Error -> {}
+                is DetailViewModel.UiState.Success -> {
+                    binding.recyclerViewParentDetail.run {
+                        setHasFixedSize(true)
+                        adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
+                    }
+                    FLIPPER_CHILD_DETAIL
+                }
+                DetailViewModel.UiState.Error -> {
+                    binding.includeErrorView.buttonRetry.setOnClickListener{
+                        viewModel.getCharacterCategory(detailViewArgs.characterId)
+                    }
+                    FLIPPER_CHILD_ERROR
+                }
+                DetailViewModel.UiState.Empty -> {
+                    FLIPPER_CHILD_EMPTY
+                }
             }
 
         }
 
-        viewModel.getComics(detailViewArgs.characterId)
+        viewModel.getCharacterCategory(detailViewArgs.characterId)
     }
 
     // Define a animação da transição como "move"
@@ -72,5 +85,13 @@ class DetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        private const val FLIPPER_CHILD_LOADING = 0
+        private const val FLIPPER_CHILD_DETAIL = 1
+        private const val FLIPPER_CHILD_ERROR = 2
+        private const val FLIPPER_CHILD_EMPTY = 3
+    }
+
 
 }
