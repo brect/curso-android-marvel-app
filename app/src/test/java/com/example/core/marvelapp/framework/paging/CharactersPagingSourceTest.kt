@@ -3,8 +3,7 @@ package com.example.core.marvelapp.framework.paging
 import androidx.paging.PagingSource
 import com.example.core.data.repository.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
-import com.example.core.marvelapp.factory.response.DataWrapperResponseFactory
-import com.example.marvelapp.framework.network.response.DataWrapperResponse
+import com.example.core.marvelapp.factory.response.CharacterPagingFactory
 import com.example.marvelapp.framework.paging.CharactersPagingSource
 import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharactorFactory
@@ -20,31 +19,31 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CharactersPagingSourceTest {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val dataWrapperResponseFactory = DataWrapperResponseFactory()
+    private val characterPagingFactory = CharacterPagingFactory()
     private val characterFactory = CharactorFactory()
 
     private lateinit var charactersPagingSource: CharactersPagingSource
 
     @Mock
-    lateinit var remoteDataSource: CharactersRemoteDataSource<DataWrapperResponse>
+    lateinit var remoteDataSource: CharactersRemoteDataSource
 
     @Before
     fun setup() {
         charactersPagingSource = CharactersPagingSource(remoteDataSource, "")
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `should return a success load result when load is called`() =
         runTest {
             // Arrange
-            whenever(remoteDataSource.fetchCharacters(any())).thenReturn(dataWrapperResponseFactory.create())
+            whenever(remoteDataSource.fetchCharacters(any())).thenReturn(characterPagingFactory.create())
 
             // Act
             val result = charactersPagingSource.load(
@@ -71,8 +70,6 @@ class CharactersPagingSourceTest {
             )
         }
 
-
-    @ExperimentalCoroutinesApi
     @Test
     fun `should return a erro load result when load is called`() =
         runTest {
