@@ -24,7 +24,7 @@ class GetCharactersCategoryUseCaseImpl @Inject constructor(
     override suspend fun doWork(
         params: GetCharactersCategoryUseCase.GetComicsParams,
     ): ResultStatus<Pair<List<Comic>, List<Event>>> {
-        return withContext(dispatchers.io) {
+        return withContext(dispatchers.io()) {
             val comicsDeferred =  async { repository.getComics(params.characterId) }
             val eventsDeferred =  async { repository.getEvents(params.characterId) }
 
