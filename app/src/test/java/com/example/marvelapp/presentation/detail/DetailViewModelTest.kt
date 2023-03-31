@@ -56,7 +56,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `should notify uiState with Success from UiState when get character categories returns success`() {
+    fun `should notify uiState with Success from UiState when get character categories returns success`() =
         runTest {
             // Arrange
             whenever(useCase.invoke(any())).thenReturn(
@@ -91,26 +91,114 @@ class DetailViewModelTest {
             )
 
         }
-    }
 
     @Test
-    fun `should notify uiState with Success from UiState when get character categories returns only comics`() {
-        // TODO: Implement tests
-    }
+    fun `should notify uiState with Success from UiState when get character categories returns only comics`() =
+        runTest {
+            // Arrange
+            whenever(useCase.invoke(any())).thenReturn(
+                flowOf(
+                    ResultStatus.Success(
+                        comics to emptyList()
+                    )
+                )
+            )
+
+            // Act
+            detailViewModel.getCharacterCategory(character.id)
+
+
+            // Assert
+            verify(uiStateObserver)
+                .onChanged(
+                    isA<DetailViewModel.UiState.Success>()
+                )
+
+            val uiStateSuccess = detailViewModel.uiState.value as DetailViewModel.UiState.Success
+            val categoriesParentList = uiStateSuccess.detailParentList
+
+            assertEquals(1, categoriesParentList.size)
+            assertEquals(
+                R.string.details_events_category,
+                categoriesParentList[0].categoryStringResId
+            )
+        }
 
     @Test
-    fun `should notify uiState with Success from UiState when get character categories returns only events`() {
-        // TODO: Implement tests
-    }
+    fun `should notify uiState with Success from UiState when get character categories returns only events`() =
+        runTest {
+            // Arrange
+            whenever(useCase.invoke(any())).thenReturn(
+                flowOf(
+                    ResultStatus.Success(
+                        emptyList<Comic>() to events
+                    )
+                )
+            )
+
+            // Act
+            detailViewModel.getCharacterCategory(character.id)
+
+
+            // Assert
+            verify(uiStateObserver)
+                .onChanged(
+                    isA<DetailViewModel.UiState.Success>()
+                )
+
+            val uiStateSuccess = detailViewModel.uiState.value as DetailViewModel.UiState.Success
+            val categoriesParentList = uiStateSuccess.detailParentList
+
+            assertEquals(1, categoriesParentList.size)
+            assertEquals(
+                R.string.details_events_category,
+                categoriesParentList[0].categoryStringResId
+            )
+        }
 
     @Test
-    fun `should notify uiState with Empty from UiState when get character categories returns an empty result list`() {
-        // TODO: Implement tests
-    }
+    fun `should notify uiState with Empty from UiState when get character categories returns an empty result list`()=
+        runTest {
+            // Arrange
+            whenever(useCase.invoke(any())).thenReturn(
+                flowOf(
+                    ResultStatus.Success(
+                        emptyList<Comic>() to emptyList()
+                    )
+                )
+            )
+
+            // Act
+            detailViewModel.getCharacterCategory(character.id)
+
+
+            // Assert
+            verify(uiStateObserver)
+                .onChanged(
+                    isA<DetailViewModel.UiState.Empty>()
+                )
+        }
 
     @Test
     fun `should notify uiState with Error from UiState when get character categories returns an exception`() {
-        // TODO: Implement tests
+        // Arrange
+        whenever(useCase.invoke(any())).thenReturn(
+            flowOf(
+                ResultStatus.Error(
+                    Throwable()
+                )
+            )
+        )
+
+        // Act
+        detailViewModel.getCharacterCategory(character.id)
+
+
+        // Assert
+        verify(uiStateObserver)
+            .onChanged(
+                isA<DetailViewModel.UiState.Error>()
+            )
     }
 
 }
