@@ -2,7 +2,7 @@ package com.example.testing.model
 
 import com.example.core.domain.model.Character
 
-class CharactorFactory {
+class CharacterFactory {
 
     fun create(hero: Hero) = when (hero){
         Hero.ThreeDMan ->  Character(1, "Hero 1", "https:sitemarvel.com/1.jpg")

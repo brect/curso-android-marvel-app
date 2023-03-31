@@ -1,12 +1,11 @@
-package com.example.core.marvelapp.framework.paging
+package com.example.marvelapp.framework.paging
 
 import androidx.paging.PagingSource
 import com.example.core.data.repository.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
-import com.example.core.marvelapp.factory.response.CharacterPagingFactory
-import com.example.marvelapp.framework.paging.CharactersPagingSource
+import com.example.marvelapp.factory.response.CharacterPagingFactory
 import com.example.testing.MainCoroutineRule
-import com.example.testing.model.CharactorFactory
+import com.example.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +26,7 @@ class CharactersPagingSourceTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private val characterPagingFactory = CharacterPagingFactory()
-    private val characterFactory = CharactorFactory()
+    private val characterFactory = CharacterFactory()
 
     private lateinit var charactersPagingSource: CharactersPagingSource
 
@@ -56,8 +55,8 @@ class CharactersPagingSourceTest {
 
             // Assert
             val expected = listOf(
-                characterFactory.create(CharactorFactory.Hero.ThreeDMan),
-                characterFactory.create(CharactorFactory.Hero.ABom)
+                characterFactory.create(CharacterFactory.Hero.ThreeDMan),
+                characterFactory.create(CharacterFactory.Hero.ABom)
             )
 
             assertEquals(

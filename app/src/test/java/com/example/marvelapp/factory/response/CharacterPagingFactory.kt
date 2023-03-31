@@ -1,4 +1,4 @@
-package com.example.core.marvelapp.factory.response
+package com.example.marvelapp.factory.response
 
 import com.example.core.domain.model.CharacterPaging
 import com.example.core.domain.model.Character

@@ -1,22 +1,15 @@
-package com.example.core.marvelapp.presentation.characters
+package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
-import androidx.paging.map
-import com.example.core.domain.model.Character
 import com.example.core.usecase.GetCharactersUseCase
-import com.example.marvelapp.presentation.characters.CharactersViewModel
 import com.example.testing.MainCoroutineRule
-import com.example.testing.model.CharactorFactory
+import com.example.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
-import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -32,12 +25,12 @@ class CharactersViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val charactersFactory = CharactorFactory()
+    private val charactersFactory = CharacterFactory()
 
     private val pagingDataCharacters = PagingData.from(
         listOf(
-            charactersFactory.create(CharactorFactory.Hero.ThreeDMan),
-            charactersFactory.create(CharactorFactory.Hero.ABom)
+            charactersFactory.create(CharacterFactory.Hero.ThreeDMan),
+            charactersFactory.create(CharacterFactory.Hero.ABom)
         )
     )
 
