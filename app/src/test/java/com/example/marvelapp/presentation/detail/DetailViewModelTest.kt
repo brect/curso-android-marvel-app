@@ -119,7 +119,7 @@ class DetailViewModelTest {
 
             assertEquals(1, categoriesParentList.size)
             assertEquals(
-                R.string.details_events_category,
+                R.string.details_comics_category,
                 categoriesParentList[0].categoryStringResId
             )
         }
