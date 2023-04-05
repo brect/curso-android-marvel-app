@@ -1,17 +1,15 @@
 package com.example.marvelapp.core.usecase
 
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import com.example.core.data.repository.CharactersRepository
-import com.example.core.domain.model.Character
 import com.example.core.usecase.GetCharactersUseCase
 import com.example.core.usecase.GetCharactersUseCaseImpl
 import com.example.testing.MainCoroutineRule
-import com.example.testing.model.CharactorFactory
+import com.example.testing.model.CharacterFactory
 import com.example.testing.pagingsource.PagingSourceFactory
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -23,6 +21,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetCharactersUseCaseImplTest {
 
@@ -34,7 +33,7 @@ class GetCharactersUseCaseImplTest {
     @Mock
     lateinit var charactersRepository: CharactersRepository
 
-    private val hero = CharactorFactory().create(CharactorFactory.Hero.ABom)
+    private val hero = CharacterFactory().create(CharacterFactory.Hero.ABom)
     private val pagingSource = PagingSourceFactory().create(listOf(hero))
 
     @Before
