@@ -165,9 +165,9 @@ empty-blocks:
     active: true
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   EmptyClassBlock:
-    active: true
+    active: false
   EmptyDefaultConstructor:
-    active: true
+    active: false
   EmptyDoWhileBlock:
     active: true
   EmptyElseBlock:
@@ -453,7 +453,7 @@ naming:
     excludes: ['**/*.kts']
     rootPackage: ''
   MatchingDeclarationName:
-    active: true
+    active: false
     mustBeFirst: true
   MemberNameEqualsClassName:
     active: true
