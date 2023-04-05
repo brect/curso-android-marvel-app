@@ -3,8 +3,7 @@ package com.example.marvelapp.presentation.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.core.domain.model.Comic
-import com.example.core.domain.model.Event
-import com.example.core.usecase.GetCharactersCategoryUseCase
+import com.example.core.usecase.GetCharacterCategoriesUseCase
 import com.example.core.usecase.base.ResultStatus
 import com.example.marvelapp.R
 import com.example.testing.MainCoroutineRule
@@ -40,7 +39,7 @@ class DetailViewModelTest {
     private lateinit var detailViewModel: DetailViewModel
 
     @Mock
-    private lateinit var useCase: GetCharactersCategoryUseCase
+    private lateinit var useCase: GetCharacterCategoriesUseCase
 
     @Mock
     private lateinit var uiStateObserver: Observer<DetailViewModel.UiState>

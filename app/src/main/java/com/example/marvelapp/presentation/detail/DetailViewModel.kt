@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.model.Comic
 import com.example.core.domain.model.Event
-import com.example.core.usecase.GetCharactersCategoryUseCase
+import com.example.core.usecase.GetCharacterCategoriesUseCase
 import com.example.core.usecase.base.ResultStatus
 import com.example.marvelapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(private val useCase: GetCharactersCategoryUseCase) :
+class DetailViewModel @Inject constructor(private val useCase: GetCharacterCategoriesUseCase) :
     ViewModel() {
 
     private val _uiState = MutableLiveData<UiState>()
@@ -24,7 +24,7 @@ class DetailViewModel @Inject constructor(private val useCase: GetCharactersCate
 
     fun getCharacterCategory(characterId: Int) = viewModelScope.launch {
         useCase.invoke(
-            GetCharactersCategoryUseCase.GetComicsParams(characterId)
+            GetCharacterCategoriesUseCase.GetCategoriesParams(characterId)
         ).watchStatus()
     }
 
