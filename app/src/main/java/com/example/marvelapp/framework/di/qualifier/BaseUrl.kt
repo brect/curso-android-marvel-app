@@ -1,4 +1,4 @@
-package com.example.marvelapp.framework.di
+package com.example.marvelapp.framework.di.qualifier
 
 import javax.inject.Qualifier
 
