@@ -45,6 +45,29 @@ class DetailFragment : Fragment() {
 
         setSharedElementTransitionOnEnter()
 
+        observeUiState(detailViewArgs)
+        observeFavoriteUiState()
+
+        viewModel.getCharacterCategory(detailViewArgs.characterId)
+
+        binding.imageFavoriteIcon.setOnClickListener {
+            viewModel.updateFavorite(detailViewArgs)
+        }
+    }
+
+    private fun observeFavoriteUiState() {
+        viewModel.favoriteUiState.observe(viewLifecycleOwner) { favoriteUiState ->
+            binding.flipperFavorite.displayedChild = when (favoriteUiState) {
+                DetailViewModel.FavoriteUiState.Loading -> FLIPPER_FAVORITE_CHILD_POSITION_LOADING
+                is DetailViewModel.FavoriteUiState.FavoriteIcon -> {
+                    binding.imageFavoriteIcon.setImageResource(favoriteUiState.icon)
+                    FLIPPER_FAVORITE_CHILD_POSITION_SUCCESS
+                }
+            }
+        }
+    }
+
+    private fun observeUiState(detailViewArgs: DetailViewArg) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             binding.viewFlipperDatail.displayedChild = when (uiState) {
                 DetailViewModel.UiState.Loading -> {
@@ -58,7 +81,7 @@ class DetailFragment : Fragment() {
                     FLIPPER_CHILD_DETAIL
                 }
                 DetailViewModel.UiState.Error -> {
-                    binding.includeErrorView.buttonRetry.setOnClickListener{
+                    binding.includeErrorView.buttonRetry.setOnClickListener {
                         viewModel.getCharacterCategory(detailViewArgs.characterId)
                     }
                     FLIPPER_CHILD_ERROR
@@ -69,8 +92,6 @@ class DetailFragment : Fragment() {
             }
 
         }
-
-        viewModel.getCharacterCategory(detailViewArgs.characterId)
     }
 
     // Define a animação da transição como "move"
@@ -91,6 +112,8 @@ class DetailFragment : Fragment() {
         private const val FLIPPER_CHILD_DETAIL = 1
         private const val FLIPPER_CHILD_ERROR = 2
         private const val FLIPPER_CHILD_EMPTY = 3
+        private const val FLIPPER_FAVORITE_CHILD_POSITION_SUCCESS = 0
+        private const val FLIPPER_FAVORITE_CHILD_POSITION_LOADING = 1
     }
 
 
