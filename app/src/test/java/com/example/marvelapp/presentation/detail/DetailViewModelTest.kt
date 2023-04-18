@@ -3,9 +3,12 @@ package com.example.marvelapp.presentation.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.core.domain.model.Comic
+import com.example.core.usecase.AddFavoriteUseCase
 import com.example.core.usecase.GetCharacterCategoriesUseCase
+import com.example.core.usecase.base.CoroutinesDispatchers
 import com.example.core.usecase.base.ResultStatus
 import com.example.marvelapp.R
+import com.example.marvelapp.presentation.detail.livedata.UiActionStateLiveData
 import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
 import com.example.testing.model.ComicFactory
@@ -39,10 +42,13 @@ class DetailViewModelTest {
     private lateinit var detailViewModel: DetailViewModel
 
     @Mock
-    private lateinit var useCase: GetCharacterCategoriesUseCase
+    private lateinit var getCharacterCategoriesUseCase: GetCharacterCategoriesUseCase
 
     @Mock
-    private lateinit var uiStateObserver: Observer<DetailViewModel.UiState>
+    private lateinit var addFavoriteUseCase: AddFavoriteUseCase
+
+    @Mock
+    private lateinit var uiStateObserver: Observer<UiActionStateLiveData.UiState>
 
     private val character = CharacterFactory().create(CharacterFactory.Hero.ThreeDMan)
     private val comics = listOf(ComicFactory().create(ComicFactory.FakeComic.FakeComic1))
@@ -50,15 +56,20 @@ class DetailViewModelTest {
 
     @Before
     fun setup() {
-        detailViewModel = DetailViewModel(useCase)
-        detailViewModel.uiState.observeForever(uiStateObserver)
+        detailViewModel = DetailViewModel(
+            getCharacterCategoriesUseCase,
+            addFavoriteUseCase,
+            mainCoroutineRule.testDispatcherProvider
+        ).apply {
+            categories.state.observeForever(uiStateObserver)
+        }
     }
 
     @Test
     fun `should notify uiState with Success from UiState when get character categories returns success`() =
         runTest {
             // Arrange
-            whenever(useCase.invoke(any())).thenReturn(
+            whenever(getCharacterCategoriesUseCase.invoke(any())).thenReturn(
                 flowOf(
                     ResultStatus.Success(
                         comics to events
@@ -67,16 +78,17 @@ class DetailViewModelTest {
             )
 
             // Act
-            detailViewModel.getCharacterCategory(character.id)
+            detailViewModel.categories.load(character.id)
 
 
             // Assert
             verify(uiStateObserver)
                 .onChanged(
-                    isA<DetailViewModel.UiState.Success>()
+                    isA<UiActionStateLiveData.UiState.Success>()
                 )
 
-            val uiStateSuccess = detailViewModel.uiState.value as DetailViewModel.UiState.Success
+            val uiStateSuccess =
+                detailViewModel.categories.state.value as UiActionStateLiveData.UiState.Success
             val categoriesParentList = uiStateSuccess.detailParentList
 
             assertEquals(2, categoriesParentList.size)
@@ -95,7 +107,7 @@ class DetailViewModelTest {
     fun `should notify uiState with Success from UiState when get character categories returns only comics`() =
         runTest {
             // Arrange
-            whenever(useCase.invoke(any())).thenReturn(
+            whenever(getCharacterCategoriesUseCase.invoke(any())).thenReturn(
                 flowOf(
                     ResultStatus.Success(
                         comics to emptyList()
@@ -104,16 +116,17 @@ class DetailViewModelTest {
             )
 
             // Act
-            detailViewModel.getCharacterCategory(character.id)
+            detailViewModel.categories.load(character.id)
 
 
             // Assert
             verify(uiStateObserver)
                 .onChanged(
-                    isA<DetailViewModel.UiState.Success>()
+                    isA<UiActionStateLiveData.UiState.Success>()
                 )
 
-            val uiStateSuccess = detailViewModel.uiState.value as DetailViewModel.UiState.Success
+            val uiStateSuccess =
+                detailViewModel.categories.state.value as UiActionStateLiveData.UiState.Success
             val categoriesParentList = uiStateSuccess.detailParentList
 
             assertEquals(1, categoriesParentList.size)
@@ -127,7 +140,7 @@ class DetailViewModelTest {
     fun `should notify uiState with Success from UiState when get character categories returns only events`() =
         runTest {
             // Arrange
-            whenever(useCase.invoke(any())).thenReturn(
+            whenever(getCharacterCategoriesUseCase.invoke(any())).thenReturn(
                 flowOf(
                     ResultStatus.Success(
                         emptyList<Comic>() to events
@@ -136,16 +149,17 @@ class DetailViewModelTest {
             )
 
             // Act
-            detailViewModel.getCharacterCategory(character.id)
+            detailViewModel.categories.load(character.id)
 
 
             // Assert
             verify(uiStateObserver)
                 .onChanged(
-                    isA<DetailViewModel.UiState.Success>()
+                    isA<UiActionStateLiveData.UiState.Success>()
                 )
 
-            val uiStateSuccess = detailViewModel.uiState.value as DetailViewModel.UiState.Success
+            val uiStateSuccess =
+                detailViewModel.categories.state.value as UiActionStateLiveData.UiState.Success
             val categoriesParentList = uiStateSuccess.detailParentList
 
             assertEquals(1, categoriesParentList.size)
@@ -156,10 +170,10 @@ class DetailViewModelTest {
         }
 
     @Test
-    fun `should notify uiState with Empty from UiState when get character categories returns an empty result list`()=
+    fun `should notify uiState with Empty from UiState when get character categories returns an empty result list`() =
         runTest {
             // Arrange
-            whenever(useCase.invoke(any())).thenReturn(
+            whenever(getCharacterCategoriesUseCase.invoke(any())).thenReturn(
                 flowOf(
                     ResultStatus.Success(
                         emptyList<Comic>() to emptyList()
@@ -168,20 +182,20 @@ class DetailViewModelTest {
             )
 
             // Act
-            detailViewModel.getCharacterCategory(character.id)
+            detailViewModel.categories.load(character.id)
 
 
             // Assert
             verify(uiStateObserver)
                 .onChanged(
-                    isA<DetailViewModel.UiState.Empty>()
+                    isA<UiActionStateLiveData.UiState.Empty>()
                 )
         }
 
     @Test
     fun `should notify uiState with Error from UiState when get character categories returns an exception`() {
         // Arrange
-        whenever(useCase.invoke(any())).thenReturn(
+        whenever(getCharacterCategoriesUseCase.invoke(any())).thenReturn(
             flowOf(
                 ResultStatus.Error(
                     Throwable()
@@ -190,13 +204,13 @@ class DetailViewModelTest {
         )
 
         // Act
-        detailViewModel.getCharacterCategory(character.id)
+        detailViewModel.categories.load(character.id)
 
 
         // Assert
         verify(uiStateObserver)
             .onChanged(
-                isA<DetailViewModel.UiState.Error>()
+                isA<UiActionStateLiveData.UiState.Error>()
             )
     }
 
