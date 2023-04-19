@@ -6,20 +6,19 @@ import com.example.core.usecase.base.ResultStatus
 import com.example.core.usecase.base.UseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 interface CheckFavoriteUseCase {
 
     operator fun invoke(params: Params): Flow<ResultStatus<Boolean>>
 
-    data class Params(
-        val characterId: Int,
-    )
+    data class Params(val characterId: Int)
 }
 
-class CheckFavoriteUseCaseImpl(
+class CheckFavoriteUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
-    private val dispatchers: CoroutinesDispatchers,
-) : UseCase<CheckFavoriteUseCase.Params, Boolean>(), CheckFavoriteUseCase {
+    private val dispatchers: CoroutinesDispatchers
+): UseCase<CheckFavoriteUseCase.Params, Boolean>(), CheckFavoriteUseCase {
 
     override suspend fun doWork(params: CheckFavoriteUseCase.Params): ResultStatus<Boolean> {
         return withContext(dispatchers.io()) {
@@ -27,5 +26,4 @@ class CheckFavoriteUseCaseImpl(
             ResultStatus.Success(isFavorite)
         }
     }
-
 }
