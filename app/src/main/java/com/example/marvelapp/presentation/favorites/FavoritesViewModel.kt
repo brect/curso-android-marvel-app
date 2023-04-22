@@ -9,7 +9,6 @@ import com.example.core.usecase.GetFavoritesUseCase
 import com.example.core.usecase.base.CoroutinesDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +50,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     sealed class UiState {
-        data class ShowFavorite(val favorite: List<FavoriteItem>) : UiState()
+        data class ShowFavorite(val favorites: List<FavoriteItem>) : UiState()
         object ShowEmpty : UiState()
     }
 
