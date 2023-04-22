@@ -8,6 +8,8 @@ import com.example.core.usecase.AddFavoriteUseCase
 import com.example.core.usecase.AddFavoriteUseCaseImpl
 import com.example.core.usecase.CheckFavoriteUseCase
 import com.example.core.usecase.CheckFavoriteUseCaseImpl
+import com.example.core.usecase.GetFavoritesUseCase
+import com.example.core.usecase.GetFavoritesUseCaseImpl
 import com.example.core.usecase.RemoveFavoriteUseCase
 import com.example.core.usecase.RemoveFavoriteUseCaseImpl
 import dagger.Binds
@@ -39,5 +41,10 @@ interface UseCaseModule {
     fun bindRemoveFavoriteUseCase(
         useCaseImpl: RemoveFavoriteUseCaseImpl,
     ): RemoveFavoriteUseCase
+
+    @Binds
+    fun bindGetFavoritesUseCase(
+        useCaseImpl: GetFavoritesUseCaseImpl,
+    ): GetFavoritesUseCase
 
 }
