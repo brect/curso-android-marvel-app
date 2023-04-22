@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GlideImageLoader @Inject constructor() : ImageLoader {
     override fun load(
         imageView: ImageView,
-        imageUrl: StackTraceElement,
+        imageUrl: String,
         @DrawableRes placeholder: Int,
         @DrawableRes fallback: Int,
     ) {
