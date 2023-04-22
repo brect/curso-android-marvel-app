@@ -243,7 +243,6 @@ class DetailViewModelTest {
             detailViewModel.favorite.checkFavorite(character.id)
 
             // Assert
-            // Assert
             verify(favoriteUiStateObserver)
                 .onChanged(
                     isA<FavoriteUiActionStateLiveData.UiState.Icon>()
@@ -267,9 +266,22 @@ class DetailViewModelTest {
                     ResultStatus.Success(false)
                 )
             )
-            // Act
+
+            // Action
             detailViewModel.favorite.checkFavorite(character.id)
 
             // Assert
+            verify(favoriteUiStateObserver)
+                .onChanged(
+                    isA<FavoriteUiActionStateLiveData.UiState.Icon>()
+                )
+
+            val uiState =
+                detailViewModel.favorite.state.value as FavoriteUiActionStateLiveData.UiState.Icon
+
+            assertEquals(
+                R.drawable.ic_favorite_unchecked,
+                uiState.icon
+            )
         }
 }
