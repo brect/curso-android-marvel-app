@@ -15,6 +15,7 @@ import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
 import com.example.marvelapp.presentation.characters.adapters.CharactersAdapter
 import com.example.marvelapp.presentation.characters.adapters.CharactersLoadMoreStateAdapter
+import com.example.marvelapp.presentation.characters.adapters.CharactersRefreshStateAdapter
 import com.example.marvelapp.presentation.detail.DetailViewArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +33,17 @@ class CharactersFragment : Fragment() {
 
     @Inject
     lateinit var imageLoader: ImageLoader
+
+    private val headerAdapter: CharactersRefreshStateAdapter by lazy {
+        CharactersRefreshStateAdapter(
+            charactersAdapter::retry
+        )
+    }
+    private val footerAdapter: CharactersLoadMoreStateAdapter by lazy {
+        CharactersLoadMoreStateAdapter(
+            charactersAdapter::retry
+        )
+    }
 
     private val charactersAdapter: CharactersAdapter by lazy {
         CharactersAdapter(imageLoader) { character, view ->
@@ -80,10 +92,9 @@ class CharactersFragment : Fragment() {
         postponeEnterTransition()
         with(binding.recyclerCharacters) {
             setHasFixedSize(true)
-            adapter = charactersAdapter.withLoadStateFooter(
-                footer = CharactersLoadMoreStateAdapter(
-                    charactersAdapter::retry
-                )
+            adapter = charactersAdapter.withLoadStateHeaderAndFooter(
+                header = headerAdapter,
+                footer = footerAdapter
             )
             viewTreeObserver.addOnPreDrawListener {
                 startPostponedEnterTransition()
@@ -95,6 +106,13 @@ class CharactersFragment : Fragment() {
     private fun observeInitialLoadState() {
         lifecycleScope.launch {
             charactersAdapter.loadStateFlow.collectLatest { loadState ->
+
+                headerAdapter.loadState = loadState.mediator
+                    ?.refresh
+                    ?.takeIf {
+                        it is LoadState.Error && charactersAdapter.itemCount > 0
+                    } ?: loadState.prepend
+
                 binding.fliperCharacters.displayedChild = when {
 
                     loadState.mediator?.refresh is LoadState.Loading -> {
