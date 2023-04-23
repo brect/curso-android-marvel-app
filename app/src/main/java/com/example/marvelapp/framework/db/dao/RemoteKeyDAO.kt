@@ -13,7 +13,7 @@ interface RemoteKeyDAO  {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(remoteKey: RemoteKey)
 
-    @Query("SELECT * $REMOTE_KEYS_TABLE_NAME")
+    @Query("SELECT * FROM $REMOTE_KEYS_TABLE_NAME")
     suspend fun remoteKey(): RemoteKey
 
     @Query("DELETE FROM $REMOTE_KEYS_TABLE_NAME")
