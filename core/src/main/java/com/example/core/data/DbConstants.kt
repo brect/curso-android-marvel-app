@@ -13,5 +13,5 @@ object DbConstants {
     const val CHARACTERS_COLUMN_INFO_IMAGE_URL = "image_url"
 
     const val REMOTE_KEYS_TABLE_NAME = "remote_keys"
-    const val REMOTE_KEYS_COLUMN_INFO_OFFSET = "next_offset"​
+    const val REMOTE_KEYS_COLUMN_INFO_OFFSET = "next_offset"
 }
