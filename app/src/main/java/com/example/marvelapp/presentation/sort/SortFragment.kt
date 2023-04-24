@@ -18,7 +18,6 @@ class SortFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentSortBinding? = null
     private val binding: FragmentSortBinding get() = _binding!!
 
-
     private val  viewModel: SortViewModel by viewModels()
 
     override fun onCreateView(
