@@ -1,14 +1,7 @@
 package com.example.core.usecase
 
-import com.example.core.data.StorageConstants
-import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_ASCENDING
-import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_DESCENDING
-import com.example.core.data.StorageConstants.ORDER_BY_NAME_ASCENDING
-import com.example.core.data.StorageConstants.ORDER_BY_NAME_DESCENDING
 import com.example.core.data.mapper.SortingMapper
-import com.example.core.data.repository.FavoritesRepository
 import com.example.core.data.repository.StorageRepository
-import com.example.core.domain.model.Character
 import com.example.core.usecase.base.CoroutinesDispatchers
 import com.example.core.usecase.base.FlowUseCase
 import kotlinx.coroutines.flow.Flow
