@@ -1,0 +1,45 @@
+package com.example.core.usecase
+
+import com.example.core.data.StorageConstants
+import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_ASCENDING
+import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_DESCENDING
+import com.example.core.data.StorageConstants.ORDER_BY_NAME_ASCENDING
+import com.example.core.data.StorageConstants.ORDER_BY_NAME_DESCENDING
+import com.example.core.data.repository.FavoritesRepository
+import com.example.core.data.repository.StorageRepository
+import com.example.core.domain.model.Character
+import com.example.core.usecase.base.CoroutinesDispatchers
+import com.example.core.usecase.base.FlowUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+
+interface GetCharactersSortingUseCase {
+    suspend operator fun invoke(
+        params: Unit = Unit,
+    ): Flow<Pair<String, String>>
+
+}
+
+class GetCharactersSortingUseCaseImpl @Inject constructor(
+    private val storageRepository: StorageRepository,
+    private val dispatchers: CoroutinesDispatchers,
+) : FlowUseCase<Unit, Pair<String, String>>(), GetCharactersSortingUseCase {
+
+
+    override suspend fun createFlowObservable(params: Unit): Flow<Pair<String, String>> {
+        return withContext(dispatchers.io()) {
+            storageRepository.sorting.map { sorting ->
+                when(sorting) {
+                    ORDER_BY_NAME_ASCENDING -> "name" to "ascending"
+                    ORDER_BY_NAME_DESCENDING -> "name" to "descending"
+                    ORDER_BY_MODIFIED_ASCENDING -> "modified" to "ascending"
+                    ORDER_BY_MODIFIED_DESCENDING -> "modified" to "descending"
+                    else -> "name" to "ascending"
+                }
+            }
+        }
+    }
+}
