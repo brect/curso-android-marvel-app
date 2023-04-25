@@ -5,6 +5,7 @@ import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_ASCENDING
 import com.example.core.data.StorageConstants.ORDER_BY_MODIFIED_DESCENDING
 import com.example.core.data.StorageConstants.ORDER_BY_NAME_ASCENDING
 import com.example.core.data.StorageConstants.ORDER_BY_NAME_DESCENDING
+import com.example.core.data.mapper.SortingMapper
 import com.example.core.data.repository.FavoritesRepository
 import com.example.core.data.repository.StorageRepository
 import com.example.core.domain.model.Character
@@ -25,6 +26,7 @@ interface GetCharactersSortingUseCase {
 
 class GetCharactersSortingUseCaseImpl @Inject constructor(
     private val storageRepository: StorageRepository,
+    private val sortingMapper: SortingMapper,
     private val dispatchers: CoroutinesDispatchers,
 ) : FlowUseCase<Unit, Pair<String, String>>(), GetCharactersSortingUseCase {
 
@@ -32,13 +34,7 @@ class GetCharactersSortingUseCaseImpl @Inject constructor(
     override suspend fun createFlowObservable(params: Unit): Flow<Pair<String, String>> {
         return withContext(dispatchers.io()) {
             storageRepository.sorting.map { sorting ->
-                when(sorting) {
-                    ORDER_BY_NAME_ASCENDING -> "name" to "ascending"
-                    ORDER_BY_NAME_DESCENDING -> "name" to "descending"
-                    ORDER_BY_MODIFIED_ASCENDING -> "modified" to "ascending"
-                    ORDER_BY_MODIFIED_DESCENDING -> "modified" to "descending"
-                    else -> "name" to "ascending"
-                }
+                sortingMapper.mapToPair(sorting)
             }
         }
     }
