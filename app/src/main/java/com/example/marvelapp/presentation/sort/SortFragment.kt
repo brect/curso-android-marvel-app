@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
+import com.example.core.data.mapper.SortingMapper
 import com.example.core.domain.model.SortingType
 import com.example.marvelapp.R
 import com.example.marvelapp.databinding.FragmentSortBinding
@@ -27,14 +29,19 @@ class SortFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_sort, container, false)
-    }
+        savedInstanceState: Bundle?
+    ) = FragmentSortBinding.inflate(
+        inflater,
+        container,
+        false
+    ).apply {
+        _binding = this
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setChipGroupListeners()
+        observeUiState()
     }
 
     private fun setChipGroupListeners() {
@@ -48,8 +55,42 @@ class SortFragment : BottomSheetDialogFragment() {
             order = getOrderValue(chip.id)
         }
 
-        binding.buttonApplySort.setOnClickListener{
+        binding.buttonApplySort.setOnClickListener {
             viewModel.applySorting(orderBy, order)
+        }
+    }
+
+    private fun observeUiState() {
+        viewModel.state.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is SortViewModel.UiState.SortingResult -> {
+                    val orderBy = uiState.storedSorting.first
+                    val order = uiState.storedSorting.second
+
+                    binding.chipGroupOrderBy.forEach {
+                        val chip = it as Chip
+                        if (getOrderByValue(chip.id) == orderBy) {
+                            chip.isChecked = true
+                        }
+                    }
+
+                    binding.chipGroupOrder.forEach {
+                        val chip = it as Chip
+                        if (getOrderValue(chip.id) == order) {
+                            chip.isChecked = true
+                        }
+                    }
+                }
+                is SortViewModel.UiState.ApplyState.Loading -> {
+                    binding.flipperApply.displayedChild = FLIPPER_CHILD_PROGRESS
+                }
+                is SortViewModel.UiState.ApplyState.Success -> {
+                    binding.flipperApply.displayedChild = FLIPPER_CHILD_BUTTON
+                }
+                is SortViewModel.UiState.ApplyState.Error  -> {
+                    binding.flipperApply.displayedChild = FLIPPER_CHILD_BUTTON
+                }
+            }
         }
     }
 
@@ -68,5 +109,10 @@ class SortFragment : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val FLIPPER_CHILD_BUTTON = 0
+        private const val FLIPPER_CHILD_PROGRESS = 1
     }
 }

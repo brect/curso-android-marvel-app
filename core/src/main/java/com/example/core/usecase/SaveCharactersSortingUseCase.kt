@@ -13,21 +13,18 @@ interface SaveCharactersSortingUseCase {
 
     operator fun invoke(params: Params): Flow<ResultStatus<Unit>>
 
-    data class Params(val sortingPair: Pair<String, String>
-    )
+    data class Params(val sortingPair: Pair<String, String>)
 }
 
 class SaveCharactersSortingUseCaseImpl @Inject constructor(
     private val storageRepository: StorageRepository,
     private val sortingMapper: SortingMapper,
-    private val dispatchers: CoroutinesDispatchers,
+    private val dispatchers: CoroutinesDispatchers
 ) : UseCase<SaveCharactersSortingUseCase.Params, Unit>(), SaveCharactersSortingUseCase {
 
     override suspend fun doWork(params: SaveCharactersSortingUseCase.Params): ResultStatus<Unit> {
         return withContext(dispatchers.io()) {
-            storageRepository.saveSorting(
-                sortingMapper.mapFromPair(params.sortingPair)
-            )
+            storageRepository.saveSorting(sortingMapper.mapFromPair(params.sortingPair))
             ResultStatus.Success(Unit)
         }
     }

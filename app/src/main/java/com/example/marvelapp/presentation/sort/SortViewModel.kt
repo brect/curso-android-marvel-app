@@ -18,11 +18,10 @@ import javax.inject.Inject
 class SortViewModel @Inject constructor(
     private val getCharactersSortingUseCase: GetCharactersSortingUseCase,
     private val saveCharactersSortingUseCase: SaveCharactersSortingUseCase,
-    private val coroutinesDispatchers: AppCoroutinesDispatchers,
+    private val coroutinesDispatchers: AppCoroutinesDispatchers
 ) : ViewModel() {
 
     private val action = MutableLiveData<Action>()
-
     val state: LiveData<UiState> = action.switchMap { action ->
         liveData(coroutinesDispatchers.main()) {
             when (action) {
@@ -33,13 +32,11 @@ class SortViewModel @Inject constructor(
                         }
                 }
                 is Action.ApplySorting -> {
-                    val orderBy: String = action.orderBy
-                    val order: String = action.order
+                    val orderBy = action.orderBy
+                    val order = action.order
 
                     saveCharactersSortingUseCase.invoke(
-                        SaveCharactersSortingUseCase.Params(
-                            orderBy to order
-                        )
+                        SaveCharactersSortingUseCase.Params(orderBy to order)
                     ).watchStatus(
                         loading = {
                             emit(UiState.ApplyState.Loading)
@@ -51,7 +48,6 @@ class SortViewModel @Inject constructor(
                             emit(UiState.ApplyState.Error)
                         }
                     )
-
                 }
             }
         }
@@ -67,6 +63,7 @@ class SortViewModel @Inject constructor(
 
     sealed class UiState {
         data class SortingResult(val storedSorting: Pair<String, String>) : UiState()
+
         sealed class ApplyState : UiState() {
             object Loading : ApplyState()
             object Success : ApplyState()
@@ -78,7 +75,7 @@ class SortViewModel @Inject constructor(
         object GetStoredSorting : Action()
         data class ApplySorting(
             val orderBy: String,
-            val order: String,
+            val order: String
         ) : Action()
     }
 }

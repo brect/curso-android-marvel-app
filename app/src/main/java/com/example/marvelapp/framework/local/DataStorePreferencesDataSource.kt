@@ -12,8 +12,9 @@ import com.example.core.data.repository.StorageLocalDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class DataStorePreferenceDataSource(
+class DataStorePreferencesDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : StorageLocalDataSource {
 

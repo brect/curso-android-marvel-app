@@ -53,12 +53,12 @@ interface UseCaseModule {
 
     @Binds
     fun bindGetCharactersSortingUseCase(
-        useCaseImpl: GetCharactersSortingUseCaseImpl,
+        useCase: GetCharactersSortingUseCaseImpl
     ): GetCharactersSortingUseCase
 
     @Binds
     fun bindSaveCharactersSortingUseCase(
-        useCaseImpl: SaveCharactersSortingUseCaseImpl,
+        useCase: SaveCharactersSortingUseCaseImpl
     ): SaveCharactersSortingUseCase
 
 }
