@@ -32,7 +32,7 @@ import androidx.appcompat.widget.SearchView
 
 
 @AndroidEntryPoint
-class CharactersFragment : Fragment(), SearchView.OnQueryTextListener {
+class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding: FragmentCharactersBinding get() = _binding!!
@@ -200,6 +200,8 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener {
         val searchItem = menu.findItem(R.id.menu_search)
         searchView = searchItem.actionView as SearchView
 
+        searchItem.setOnActionExpandListener(this)
+
         searchView.run {
             isSubmitButtonEnabled = true
             setOnQueryTextListener(this@CharactersFragment)
@@ -228,6 +230,15 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
+    override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+        return true
+    }
+
+    override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+        viewModel.closeSearch()
+        viewModel.searchCharacters()
+        return true
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -240,6 +251,7 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener {
         private const val FLIPPER_CHILD_CHARACTERS = 1
         private const val FLIPPER_CHILD_ERROR = 2
     }
+
 
 
 }
