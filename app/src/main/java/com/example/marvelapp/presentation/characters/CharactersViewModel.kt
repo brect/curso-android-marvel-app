@@ -29,9 +29,12 @@ class CharactersViewModel @Inject constructor(
     val state: LiveData<UiState> = action
         .switchMap { action ->
             when (action) {
-                is Action.Search, Action.Sort-> {
+                is Action.Search, Action.Sort -> {
                     getCharactersUseCase.invoke(
-                        GetCharactersUseCase.GetCharactersParams(currentSearchQuery, getPageConfig())
+                        GetCharactersUseCase.GetCharactersParams(
+                            currentSearchQuery,
+                            getPageConfig()
+                        )
                     ).cachedIn(viewModelScope).map {
                         UiState.SearchResult(it)
                     }.asLiveData(coroutinesDispatchers.main())
@@ -53,19 +56,20 @@ class CharactersViewModel @Inject constructor(
         action.value = Action.Search
     }
 
-    fun applySort(){
+    fun applySort() {
         action.value = Action.Sort
     }
 
-    fun closeSearch(){
-       if (currentSearchQuery.isNotEmpty()) currentSearchQuery = ""
+    fun closeSearch() {
+        if (currentSearchQuery.isNotEmpty()) currentSearchQuery = ""
     }
+
     sealed class UiState {
         data class SearchResult(val data: PagingData<Character>) : UiState()
     }
 
     sealed class Action {
-        object Search: Action()
-        object Sort: Action()
+        object Search : Action()
+        object Sort : Action()
     }
 }

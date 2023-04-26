@@ -32,7 +32,8 @@ import androidx.appcompat.widget.SearchView
 
 
 @AndroidEntryPoint
-class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+class CharactersFragment : Fragment(), SearchView.OnQueryTextListener,
+    MenuItem.OnActionExpandListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding: FragmentCharactersBinding get() = _binding!!
@@ -202,6 +203,11 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
 
         searchItem.setOnActionExpandListener(this)
 
+        if (viewModel.currentSearchQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(viewModel.currentSearchQuery, false)
+        }
+
         searchView.run {
             isSubmitButtonEnabled = true
             setOnQueryTextListener(this@CharactersFragment)
@@ -251,7 +257,6 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
         private const val FLIPPER_CHILD_CHARACTERS = 1
         private const val FLIPPER_CHILD_ERROR = 2
     }
-
 
 
 }
