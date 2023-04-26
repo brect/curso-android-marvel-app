@@ -206,8 +206,12 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    override fun onQueryTextSubmit(p0: String?): Boolean {
-        return true
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return query?.let {
+            viewModel.currentSearchQuery = it
+            viewModel.searchCharacters()
+            true
+        } ?: false
     }
 
     override fun onQueryTextChange(p0: String?): Boolean {
