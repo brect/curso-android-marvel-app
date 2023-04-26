@@ -8,7 +8,6 @@ import com.example.core.domain.model.Character
 import com.example.core.usecase.GetCharactersUseCase.GetCharactersParams
 import com.example.core.usecase.base.PagingUseCase
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
