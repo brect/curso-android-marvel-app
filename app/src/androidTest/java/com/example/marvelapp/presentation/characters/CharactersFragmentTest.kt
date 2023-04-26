@@ -1,7 +1,5 @@
 package com.example.marvelapp.presentation.characters
 
-import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -34,15 +32,12 @@ class CharactersFragmentTest  {
 
     private lateinit var server: MockWebServer
 
-    val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
     @Before
     fun setUp() {
         server = MockWebServer().apply {
             start(8080)
         }
-        launchFragmentInHiltContainer<CharactersFragment>(
-            navHostController = navController
-        )
+        launchFragmentInHiltContainer<CharactersFragment>()
     }
 
     @Test
